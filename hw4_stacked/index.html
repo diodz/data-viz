@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <!-- set styles on the top -->
+    <style>
+        .chart-container {
+            max-width: 1050px;
+            /* border: 2px solid red; */
+            margin: 0 auto;
+            /* auto centers the div */
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        }
+
+        svg {
+            /* border: 2px solid purple; */
+            overflow: visible;
+        }
+
+        h1 {
+            margin: 0 auto;
+        }
+
+        .x .tick line {
+            stroke: rgba(0, 0, 0, .2);
+        }
+
+        .y .tick line {
+            stroke: rgba(0, 0, 0, .2);
+        }
+
+        .x .domain {
+            display: none;
+        }
+
+        .y .domain {
+            display: none;
+        }
+
+        .y .tick text {
+            font-size: 14px;
+            fill: #333;
+
+        }
+
+        .x .tick text {
+            font-size: 14px;
+            fill: #333;
+        }
+
+        .label {
+            font-size: 35px;
+            font-weight: 200;
+        }
+
+        .axis-label {
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .source {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="chart-container">
+        <h1 class="headline">
+            The Decline Of Farming And The Rise Of Everything Else
+
+        </h1>
+
+        <svg width="1050px" height="575px">
+        </svg>
+        <p class="source">Notes: 
+            White collar includes professional and technical, managerial, sales and clerical jobs. Blue collar includes machine operators, assembly, manual labor and construction jobs. Service includes food service, health care and personal service jobs
+            
+            Source: IPUMS-USA, University Of Minnesota
+            
+            Credit: Quoctrung Bui/NPR</p>
+
+    </div>
+</body>
+
+<script src="https://d3js.org/d3.v6.min.js"></script>
+<!-- we're using d3 version 6 (the latest version) for all out work -->
+
+<script>
+    console.log({ d3 })
+
+    let width = 800;
+    let height = 500;
+
+    let svg = d3.select("body")
+        .select("svg")
+
+    d3.csv("firstjobs.csv").then(function (data) {
+
+        console.log({data})
+
+        let margin = { top: 10, right: 10, bottom: 10, left: 30 };
+
+        let sel_cols = [
+            "Other",
+            "White Collar",
+            "Service",
+            "Blue Collar",
+            "Farming"]
+
+        let sel_colors = [
+            "#CCC", // "Medicaid",
+            "#DD488F", // "Medicare",
+            "#DFD060", // "Medicare+Medicaid",
+            "rgba(23, 143, 232, 1)", // "Employer",
+            "#29A97E" // "Uninsured"
+        ]
+
+        let d2014 = data
+
+        console.log({d2014})
+
+    //     //https://github.com/d3/d3-shape#stacks
+        let series2014 = d3.stack().keys(sel_cols)(d2014);
+
+        console.log({series2014})
+
+    //     // https://github.com/d3/d3-scale#ordinal-scales
+        let color = d3.scaleOrdinal()
+            .domain(sel_cols)
+            .range(sel_colors)
+
+        let x = d3.scaleLinear()
+            .domain([1850, 2013])
+            .range([margin.left, width])
+
+        let y = d3.scaleLinear()
+            .domain([0, 1])
+            .range([height - margin.bottom, margin.top])
+
+    //     //https://github.com/d3/d3-shape#areas
+        let area = d3.area()
+            .x(d => x(d.data.year))
+            .y0(d => y(d[0]))
+            .y1(d => y(d[1]))
+
+        let xAxisSettings = d3.axisBottom(x)
+            .tickSize(6)
+            .tickPadding(6)
+            .ticks(15)
+            .tickFormat(d3.format(".0f"))
+
+        let xAxis = svg.append("g")
+            .attr("class", "x axis")
+            .call(xAxisSettings)
+            .call(g => g.selectAll(".domain").remove())
+            .attr("transform", `translate(0,${height - margin.bottom})`)
+
+
+        let yAxisSettings = d3.axisLeft(y)
+            .ticks(10)
+            .tickSize(6)
+            .tickPadding(4)
+            .tickFormat(d3.format(".0%"))
+
+        let yAxis = svg
+            .append("g")
+            .attr("class", "y axis")
+            .call(yAxisSettings)
+            .call(g => g.selectAll(".domain").remove())
+
+    //     //labelling 
+        svg.append("g")
+            .selectAll("path")
+            .data(series2014)
+            .join("path")
+            .attr("class", d =>  {
+                console.log(d)
+                return d.key
+            })
+            .attr("fill", d => color(d.key))
+            .style("fill-opacity", "0.8")
+            .attr("d", area)
+    //         .append("title")
+
+        svg.append("text")
+            .attr("class", "label")
+            .attr("x", width * 6/11)
+            .attr("y", width * 1.15/2)
+            .text("Other")
+            .style("fill-opacity", "0.3")
+            .style("fill", "black")
+            .style("font-size", "20px") 
+
+        svg.append("text")
+            .attr("class", "label")
+            .attr("x", width * 9/11)
+            .attr("y", width * 0.45/2)
+            .text("Services")
+            .style("fill-opacity", "0.3")
+            .style("fill", "black")
+            .style("font-size", "20px") 
+
+        svg.append("text")
+            .attr("class", "label")
+            .attr("x", width * 6/11)
+            .attr("y", width * 0.45/2)
+            .text("Blue Collar")
+            .style("fill-opacity", "0.3")
+            .style("fill", "black")
+            .style("font-size", "20px") 
+
+
+        svg.append("text")
+            .attr("class", "label")
+            .attr("x", width * 7.5/10)
+            .attr("y", width * 1 /2)
+            .text("White Collar")
+            .style("fill", "black")
+            .style("font-size", "20px") 
+            .style("fill-opacity", "0.3")
+
+        svg.append("text")
+            .attr("class", "label")
+            .attr("x", width * 1/10)
+            .attr("y", width * 0.2 /2)
+            .text("Farming")
+            .style("fill", "black")
+            .style("font-size", "20px") 
+            .style("fill-opacity", "0.3")
+    })
+
+</script>

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <!-- set styles on the top -->
+    <style>
+        .chart-container {
+            max-width: 1050px;
+            margin: 0 auto;
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        }
+
+        svg {
+            overflow: visible;
+        }
+
+        h1 {
+            margin: 0 auto;
+        }
+
+        .x .tick line {
+            stroke: rgba(0, 0, 0, .2);
+        }
+
+        .y .tick line {
+            stroke: rgba(0, 0, 0, .2);
+        }
+
+        .x .domain {
+            display: none;
+        }
+
+        .y .domain {
+            display: none;
+        }
+
+        .y .tick text {
+            font-size: 14px;
+            fill: #333;
+
+        }
+
+        .x .tick text {
+            font-size: 14px;
+            fill: #333;
+        }
+        .dot {
+    fill: IndianRed;
+  }
+        grid line {
+    stroke: lightgrey;
+    stroke-opacity: 0.6;
+    shape-rendering: crispEdges
+  }
+        .grid path {
+    stroke-width: 0;
+  }
+    </style>
+</head>
+
+<body>
+    <div class="chart-container">
+        <h1 class="headline">
+            More Than 3 Million Americans Lost Their Jobs Last Week. See Your State.
+        </h1>
+
+        <svg width="1050px" height="1000px">
+
+        </svg>
+        <p></p>
+    </div>
+</body>
+
+<script src="https://d3js.org/d3.v6.min.js"></script>
+<!-- we're using d3 version 6 (the latest version) for all out work -->
+
+<script>
+
+    let width = 800;
+    let height = 500;
+
+    let svg = d3.select("body")
+        .select("svg")
+
+    d3.csv("nat.csv").then(function (data) {
+
+        data.forEach(function (row) {
+            row.date = new Date( row.end + "T00:00")
+            row.value = +row.value
+        })
+
+        console.log(data)
+
+        let margin = { top: 30, right: 10, bottom: 10, left: 30 };
+
+        let x = d3.scaleTime()
+            .domain(d3.extent(data.map(function (d) { return d.date }))) //d3 extent
+            .range([margin.left, width - margin.right])
+
+        let y = d3.scaleLinear()
+            .domain([0, d3.max(data, d => d.value)])
+            .range([height - margin.bottom, margin.top])
+
+
+        let yAxisSettings = d3.axisLeft(y) 
+            //.tickValues([20000, 40000, 60000]) //can define your own ticks
+            .ticks(6)
+            //.tickValues([500,000, '1.0 million', '1.5 million','2.0 million','2.5 million','3.0 million'])
+            .tickSize(-width) //size of tick lines
+            .tickFormat(d3.format(",.2s")) 
+            .tickPadding(10)
+            
+            function formatTick(d) {
+            const s = (d / 1e6).toFixed(1);
+            return this.parentNode.nextSibling ? `\xa0${s}` : `$${s} million`;
+}            
+
+        let xAxisSettings = d3.axisBottom(x)
+            .ticks(10)
+            .tickSize(10)
+            .tickPadding(10)
+
+        let bg = svg.append("rect")
+            .attr("x", margin.left)
+            .attr("y", 0)
+            .attr("width", width)
+            .attr("height", height)
+            .style("fill", "rgba(0,0,0,0)")
+
+        let xAxisTicks = svg.append("g")
+            .attr("class", "x axis") 
+            .call(xAxisSettings)
+            .attr("transform", `translate(0,${height - margin.bottom})`)
+
+        let yAxisTicks = svg.append("g")
+            .attr("class", "y axis")
+            .call(yAxisSettings)
+            .attr("transform", `translate(${margin.left},0)`)
+        
+
+
+        //https://github.com/d3/d3-shape#areas
+        let area = d3.area() 
+            .defined(d => !isNaN(d.value))
+            .x(function (d) { return x(d.date) }) //accessing date 
+            .y0(y(0)) //accesssing at baseline
+            .y1(function (d) { return y(d.value) }) //accesssing value 
+            
+
+
+        let baseline = svg.append("line")
+        .attr("x1", margin.left)
+        .attr("x2", width + margin.left)
+        .attr("y1", y(345000))
+        .attr("y2", y(345000))
+        .style("stroke", "black")
+        .style("stroke-width", "1px")
+
+        
+
+        svg.append("text")
+        .attr("x", ( width * 4.5 / 5))             
+        .attr("y", (margin.top * 73 / 5 ))
+        .attr("text-anchor", "middle")  
+        .style("font-size", "12px") 
+        .style("text-decoration", "bold")  
+        .style("fill-opacity", "0.4")
+        .text("Weekly average: 345,000");
+
+        svg.append("text")
+        .attr("x", ( width * 1.4 / 5))             
+        .attr("y", (margin.top * 92 / 5 ))
+        .attr("text-anchor", "middle")  
+        .style("font-size", "12px") 
+        .style("text-decoration", "bold")  
+        .style("fill-opacity", "0.4")
+        .text("Note: Official figures are seasonally adjusted. Source: Department of Labor");
+
+        svg.append('circle')
+        .attr("x", ( width * 1.4 / 5))
+        .attr("y", ( width * 0.8 / 5))
+        .attr("cx", width * 4.935 / 5)
+        .attr("cy", height * 1 / 15)
+        .attr("r", 6)
+        //.text("Note: Official figures are seasonally adjusted. Source: Department of Labor")
+        .style("fill", "red");
+
+        svg.append("text")
+        .attr("x", ( width * 4.5 / 5))             
+        .attr("y", (margin.top * 7 / 5 ))
+        .attr("cx", width * 4.935 / 5)
+        .attr("cy", height * 1 / 15)
+        .attr("text-anchor", "middle")  
+        .style("font-size", "25px") 
+        .style("text-decoration", "bold")  
+        .style("fill-opacity", "0.9")
+        .style("fill", "red")
+        .text("3,283,000");
+
+        svg.append("text")
+        .attr("x", ( width * 4.5 / 5))             
+        .attr("y", (margin.top * 10 / 5 ))
+        //.attr("cx", width * 4.935 / 5)
+        //.attr("cy", height * 1 / 15)
+        .attr("text-anchor", "middle")  
+        .style("font-size", "12px") 
+        //.style("text-decoration", "bold")  
+        .style("fill-opacity", "0.6")
+        .style("fill", "red")
+        .text("claims filed last week");
+
+        let line_path = svg.append("path") 
+            .attr("class", "area") 
+            .attr("d", area(data))
+            .style("fill", "red")
+            .style("stroke-dasharray", "5 5")
+            .style("fill-opacity", "0.6")
+            
+            
+
+
+    })
+    
+
+    
+</script>
