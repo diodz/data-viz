@@ -2,6 +2,6 @@
 
  [Bar chart](https://diodz.github.io/data-viz/hw4_bar/index.html)
  
- [Stacked chart](https://diodz.github.io/data-viz/hw_stacked/index.html)
+ [Stacked chart](https://diodz.github.io/data-viz/hw4_stacked/index.html)
  
 
