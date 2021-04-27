@@ -1,7 +1,7 @@
 # Repository with charts for data visualization 
 
-Click on home to navigate this website
-
- [home](https://diodz.github.io/data-viz/)
+ [Bar chart](https://diodz.github.io/data-viz/hw_bar)
+ 
+ [Stacked chart](https://diodz.github.io/data-viz/hw_stacked)
  
 
