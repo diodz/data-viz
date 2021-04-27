@@ -1,5 +1,7 @@
-# click on links to charts to open
+# Repository with charts for data visualization 
+
+Go to the index file to navigate the website
+
+ [home](https://diodz.github.io/data-viz/)
  
- [bar chart](hw4_bar/index.html)
- 
- [stacked chart](hw4_stacked/index.html)
+
