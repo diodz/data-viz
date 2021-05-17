@@ -6,4 +6,5 @@
  
  [Healthcare (Homework 6)](https://diodz.github.io/data-viz/hw6_healthcare/index.html)
  
+ [Map (Homework 7)](https://diodz.github.io/data-viz/hw7_maps/index.html)
 
