@@ -8,6 +8,6 @@
  
  [Map (Homework 7)](https://diodz.github.io/data-viz/hw7_maps/index.html)
  
- [Choropleth France (Homework 8)](https://diodz.github.io/data-viz/hw7_choropleth/index.html)
+ [Choropleth France (Homework 8)](https://diodz.github.io/data-viz/hw8_choropleth/index.html)
 
 
