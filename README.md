@@ -9,5 +9,10 @@
  [Map (Homework 7)](https://diodz.github.io/data-viz/hw7_maps/index.html)
  
  [Choropleth France (Homework 8)](https://diodz.github.io/data-viz/hw8_choropleth/index.html)
+ 
+ [Bigfoot sightings by county (Final project)](https://diodz.github.io/data-viz/final_project/index.html)
+ 
+ [Bigfoot sightings by year (Final project)](https://diodz.github.io/data-viz/final_project/sightings.html)
+
 
 
