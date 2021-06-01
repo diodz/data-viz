@@ -54,8 +54,8 @@
 <script src="https://unpkg.com/topojson@3"></script>
 
 <script>    
-    let width = 1250*0.5;
-    let height = 700*0.5;
+    let width = 1250;
+    let height = 700;
 
     let svg = d3.select("body").select("svg")
 
@@ -93,7 +93,7 @@
             .attr("fill-opacity", 0.7)
             .attr("stroke-width", 0.9)
             .attr("transform", d => "translate(" + path.centroid(d) + ")")
-            .attr("r", d => Math.sqrt(d.properties.observed *1))
+            .attr("r", d => Math.sqrt(d.properties.observed *10))
             
 
         let popup = d3.select(".popup")
