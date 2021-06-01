@@ -13,6 +13,9 @@
  [Bigfoot sightings by county (Final project)](https://diodz.github.io/data-viz/final_project/index.html)
  
  [Bigfoot sightings by year (Final project)](https://diodz.github.io/data-viz/final_project/sightings.html)
+ 
+ [Bigfoot sightings by state (Extra)](https://diodz.github.io/data-viz/fun_vusualizations/index.html)
+
 
 
 
