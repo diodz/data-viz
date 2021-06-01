@@ -93,7 +93,7 @@
             .attr("fill-opacity", 0.7)
             .attr("stroke-width", 0.9)
             .attr("transform", d => `translate(${projection([d.geometry.coordinates[0], d.geometry.coordinates[1]])})`)
-            .attr("r", d => Math.sqrt(20 * d.properties.observed))
+            .attr("r", d => Math.sqrt(15 * d.properties.observed))
             
 
         let popup = d3.select(".popup")
