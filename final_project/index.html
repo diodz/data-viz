@@ -63,7 +63,7 @@
     d3.json('topo.json').then(function (data) {
 
         console.log({data})
-        let counties = topojson.feature(data, data.objects.sightings);
+        let counties = topojson.feature(data, data.objects.county);
         let states = topojson.feature(data, data.objects.cb_2018_us_state_20m);
         console.log(counties)
 
@@ -88,8 +88,8 @@
             .data(counties.features.filter(d => d.geometry != null).sort((a, b) => d3.descending(a.properties.observed, b.observed)))
             .join("circle")
             .attr("class", function (d) { return "circles p-" + d.properties.GEOID})
-            .attr("fill", "grey")
-            .attr("stroke", "white")
+            .attr("fill", "orange")
+            .attr("stroke", "red")
             .attr("fill-opacity", 0.7)
             .attr("stroke-width", 0.9)
             .attr("transform", d => `translate(${projection([d.geometry.coordinates[0], d.geometry.coordinates[1]])})`)
